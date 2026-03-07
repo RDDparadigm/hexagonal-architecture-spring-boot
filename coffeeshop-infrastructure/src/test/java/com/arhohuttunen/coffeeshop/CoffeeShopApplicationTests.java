@@ -75,8 +75,7 @@ class CoffeeShopApplicationTests {
                         {
                             "cardHolderName": "Michael Faraday",
                             "cardNumber": "11223344",
-                            "expiryMonth": 12,
-                            "expiryYear": 2023
+                            "expiry": "2023-12"
                         }
                         """))
                 .andExpect(status().isOk());

@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.time.Month;
-import java.time.Year;
 import java.util.UUID;
 
 @Controller
@@ -27,8 +25,7 @@ public class PaymentController {
                 new CreditCard(
                         request.cardHolderName(),
                         request.cardNumber(),
-                        Month.of(request.expiryMonth()),
-                        Year.of(request.expiryYear())
+                        request.expiry()
                 )
         );
         return ResponseEntity.ok(PaymentResponse.fromDomain(payment));

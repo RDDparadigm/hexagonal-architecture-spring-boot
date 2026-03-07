@@ -10,6 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.time.YearMonth;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class PaymentsJpaAdapterTest {
     void findingPreviouslyPersistedPaymentReturnsDetails() {
         var payment = payments.findPaymentByOrderId(UUID.fromString("a41c9394-3aa6-4484-b0b4-87de55fa2cf4"));
 
-        var expectedCreditCard = new CreditCard("Michael Faraday", "11223344", Month.JANUARY, Year.of(2023));
+        var expectedCreditCard = new CreditCard("Michael Faraday", "11223344", YearMonth.of(2023, Month.JANUARY));
 
         assertThat(payment.creditCard()).isEqualTo(expectedCreditCard);
     }

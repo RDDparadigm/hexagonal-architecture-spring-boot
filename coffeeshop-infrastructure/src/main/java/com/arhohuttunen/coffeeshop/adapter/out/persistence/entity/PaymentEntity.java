@@ -12,6 +12,7 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.Year;
+import java.time.YearMonth;
 import java.util.UUID;
 
 @Entity
@@ -46,8 +47,7 @@ public class PaymentEntity {
                 new CreditCard(
                         cardHolderName,
                         cardNumber,
-                        expiryMonth,
-                        expiryYear
+                        YearMonth.of(expiryYear.getValue(), expiryMonth)
                 ),
                 paid
         );
@@ -58,8 +58,8 @@ public class PaymentEntity {
         entity.setOrderId(payment.orderId());
         entity.setCardHolderName(payment.creditCard().cardHolderName());
         entity.setCardNumber(payment.creditCard().cardNumber());
-        entity.setExpiryMonth(payment.creditCard().expiryMonth());
-        entity.setExpiryYear(payment.creditCard().expiryYear());
+        entity.setExpiryMonth(payment.creditCard().expiry().getMonth());
+        entity.setExpiryYear(Year.of(payment.creditCard().expiry().getYear()));
         entity.setPaid(payment.paid());
         return entity;
     }
