@@ -1,14 +1,18 @@
 package com.arhohuttunen.coffeeshop.application.order;
 
+import com.arhohuttunen.coffeeshop.application.order.OrderTransition.OrderEvent;
 import com.arhohuttunen.coffeeshop.shared.Location;
 import com.arhohuttunen.coffeeshop.shared.Status;
 
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
+import java.math.RoundingMode;
 
 public class Order {
+
     private UUID id = UUID.randomUUID();
     private final Location location;
     private final List<LineItem> items;
@@ -85,35 +89,30 @@ public class Order {
         return new Order(id, location, items, status);
     }
 
-    public Order markPaid() {
-        if (status != Status.PAYMENT_EXPECTED) {
-            throw new IllegalStateException("Order is already paid");
+    public Order transition(OrderEvent event) {
+
+        if (!TRANSITION.canTransition(this, event)) {
+            throw new IllegalStateException(TRANSITION.getErrorMessage(event));
         }
-        status = Status.PAID;
+
+        this.status = TRANSITION.getNextStatus(event);
         return this;
+
+    }
+
+    public Order markPaid() {
+        return transition(OrderEvent.TO_PAID);
     }
 
     public Order markBeingPrepared() {
-        if (status != Status.PAID) {
-            throw new IllegalStateException("Order is not paid");
-        }
-        status = Status.PREPARING;
-        return this;
+        return transition(OrderEvent.TO_PREPARING);
     }
 
     public Order markPrepared() {
-        if (status != Status.PREPARING) {
-            throw new IllegalStateException("Order is not being prepared");
-        }
-        status = Status.READY;
-        return this;
+        return transition(OrderEvent.TO_READY);
     }
 
     public Order markTaken() {
-        if (status != Status.READY) {
-            throw new IllegalStateException("Order is not ready");
-        }
-        status = Status.TAKEN;
-        return this;
+        return transition(OrderEvent.TO_TAKEN);
     }
 }

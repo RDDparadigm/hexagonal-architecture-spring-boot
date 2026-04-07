@@ -9,7 +9,6 @@ import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDate;
 import java.time.Month;
-import java.time.Year;
 import java.time.YearMonth;
 import java.util.NoSuchElementException;
 import java.util.UUID;
