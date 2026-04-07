@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
-public record OrderRequest(@NotNull @NotEmpty Location location, @NotNull @NotEmpty List<LineItemRequest> items) {
+public record OrderRequest(@NotNull Location location, @NotEmpty List<LineItemRequest> items) {
     public List<LineItem> toDomainItems() {
         return items.stream().map(LineItemRequest::toDomain).toList();
     }
