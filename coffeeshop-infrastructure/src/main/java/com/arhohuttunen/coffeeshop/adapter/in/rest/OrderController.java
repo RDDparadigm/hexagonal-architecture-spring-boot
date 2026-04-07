@@ -3,6 +3,8 @@ package com.arhohuttunen.coffeeshop.adapter.in.rest;
 import com.arhohuttunen.coffeeshop.adapter.in.rest.resource.OrderRequest;
 import com.arhohuttunen.coffeeshop.adapter.in.rest.resource.OrderResponse;
 import com.arhohuttunen.coffeeshop.application.in.OrderingCoffee;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,7 @@ public class OrderController {
     private final OrderingCoffee orderingCoffee;
 
     @PostMapping("/order")
-    ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest request, UriComponentsBuilder uriComponentsBuilder) {
+    ResponseEntity<OrderResponse> createOrder(@RequestBody @Valid OrderRequest request, UriComponentsBuilder uriComponentsBuilder) {
         var order = orderingCoffee.placeOrder(
                 request.location(),
                 request.toDomainItems()
@@ -32,7 +34,7 @@ public class OrderController {
     }
 
     @PostMapping("/order/{id}")
-    ResponseEntity<OrderResponse> updateOrder(@PathVariable UUID id, @RequestBody OrderRequest request) {
+    ResponseEntity<OrderResponse> updateOrder(@PathVariable UUID id, @RequestBody @Valid OrderRequest request) {
         var order = orderingCoffee.updateOrder(
                 id,
                 request.location(),

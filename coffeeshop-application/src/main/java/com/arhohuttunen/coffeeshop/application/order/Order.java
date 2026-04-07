@@ -14,16 +14,30 @@ public class Order {
     private final List<LineItem> items;
     private Status status = Status.PAYMENT_EXPECTED;
 
+    // singleton pattern to prevent multiple instances of OrderTransition
+    private static final OrderTransition TRANSITION = new OrderTransition();
+
     public Order(Location location, List<LineItem> items) {
-        this.location = location;
-        this.items = items;
+
+        this.location = Objects.requireNonNull(location, "Location cannot be null");
+        this.items = Objects.requireNonNull(items, "Items cannot be null");
+
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("Order must have at least one item");
+        }
     }
 
     public Order(UUID id, Location location, List<LineItem> items, Status status) {
-        this.id = id;
-        this.location = location;
-        this.items = items;
-        this.status = status;
+
+        this.id = Objects.requireNonNull(id, "Id cannot be null");
+        this.location = Objects.requireNonNull(location, "Location cannot be null");
+        this.items = Objects.requireNonNull(items, "Items cannot be null");
+        this.status = Objects.requireNonNull(status, "Status cannot be null");
+
+        if (items.isEmpty()) {
+            throw new IllegalArgumentException("Order must have at least one item");
+        }
+
     }
 
     public UUID getId() {
@@ -48,6 +62,20 @@ public class Order {
 
     public BigDecimal getCost() {
         return items.stream().map(LineItem::getCost).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
+
+    public BigDecimal getCostWithDiscount(int discountPercent) {
+
+        if (discountPercent < 0 || discountPercent > 100) {
+            throw new IllegalArgumentException("Discount must be between 0 and 100");
+        }
+
+        BigDecimal originalCost = getCost();
+        BigDecimal discount = originalCost.multiply(BigDecimal.valueOf(discountPercent)).divide(BigDecimal
+                .valueOf(100), 2, RoundingMode.HALF_DOWN);
+
+        return originalCost.subtract(discount);
+
     }
 
     public Order update(Location location, List<LineItem> items) {

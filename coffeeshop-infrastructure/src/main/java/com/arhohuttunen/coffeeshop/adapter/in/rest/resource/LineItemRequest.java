@@ -5,7 +5,10 @@ import com.arhohuttunen.coffeeshop.shared.Drink;
 import com.arhohuttunen.coffeeshop.shared.Milk;
 import com.arhohuttunen.coffeeshop.shared.Size;
 
-public record LineItemRequest(Drink drink, Milk milk, Size size, Integer quantity) {
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
+public record LineItemRequest(@NotNull @NotEmpty Drink drink, @NotNull @NotEmpty Milk milk, @NotNull @NotEmpty Size size, @NotNull @NotEmpty Integer quantity) {
     public LineItem toDomain() {
         return new LineItem(drink, milk, size, quantity);
     }
